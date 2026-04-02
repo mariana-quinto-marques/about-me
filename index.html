@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mariana Quinto Marques | Senior Product Manager</title>
+    <meta name="description" content="Senior Product Manager with a background in regulated insurance and financial services. Shipped two platforms from scratch in under five months each.">
+    <meta property="og:title" content="Mariana Quinto Marques | Senior Product Manager">
+    <meta property="og:description" content="Senior Product Manager in London, UK. Shipping products in complex regulated environments.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-card: #18181b;
+            --bg-card-hover: #1f1f23;
+            --bg-elevated: #27272a;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --accent: #06b6d4;
+            --accent-dim: rgba(6, 182, 212, 0.12);
+            --accent-glow: rgba(6, 182, 212, 0.25);
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --max-w: 1080px;
+            --header-h: 64px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        .container { max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; }
+
+        /* ===== ANIMATED GRAIN OVERLAY ===== */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        header.scrolled { border-bottom-color: var(--border); }
+
+        header nav {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            height: var(--header-h);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--mono);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.05em;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+
+        .nav-links a {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            letter-spacing: 0.02em;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.125rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* ===== HERO ===== */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, var(--accent-dim) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6,182,212,0.04) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            padding: 2rem 1.5rem;
+        }
+
+        .hero-label {
+            font-family: var(--mono);
+            font-size: 0.8125rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero-label::before {
+            content: '';
+            width: 32px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        #hero h1 {
+            font-size: clamp(2.75rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        #hero h1 .gradient {
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-desc {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 560px;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .hero-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .hero-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .hero-links a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* ===== SECTIONS ===== */
+        section { padding: 6rem 0; }
+
+        .section-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 560px;
+            margin-bottom: 3rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0;
+            border: none;
+        }
+
+        /* ===== ABOUT ===== */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .about-bio p {
+            color: var(--text-secondary);
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            margin-bottom: 1.25rem;
+        }
+
+        .about-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i { color: var(--accent); font-size: 0.875rem; }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .stat-card:hover { border-color: var(--border-hover); }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== EXPERIENCE ===== */
+        .exp-company {
+            margin-bottom: 3rem;
+        }
+
+        .exp-company:last-child { margin-bottom: 0; }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .exp-company-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .exp-period {
+            font-family: var(--mono);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+
+        .exp-roles { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .exp-role {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .exp-role:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+        }
+
+        .exp-role-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .exp-role-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .exp-role-dates {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+        }
+
+        .exp-role ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .exp-role li {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .exp-role li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ===== EDUCATION ===== */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .edu-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: border-color 0.2s;
+        }
+
+        .edu-card:hover { border-color: var(--border-hover); }
+
+        .edu-degree {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+        }
+
+        .edu-school {
+            font-size: 0.9375rem;
+            color: var(--accent);
+            margin-bottom: 0.375rem;
+        }
+
+        .edu-detail {
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+
+        .edu-highlight {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .edu-highlight i {
+            color: var(--accent);
+            margin-right: 0.375rem;
+        }
+
+        /* ===== TOOLS ===== */
+        .tools-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.625rem;
+        }
+
+        .tool-tag {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .tool-tag:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* ===== KEY PROJECTS ===== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .project-card:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .project-card:hover::before { opacity: 1; }
+
+        .project-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.375rem;
+        }
+
+        .tag {
+            font-family: var(--mono);
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            padding: 0.25rem 0.625rem;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+        }
+
+        .case-study-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #000;
+            background: var(--accent);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .case-study-link:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .case-study-link i { font-size: 0.6875rem; }
+
+        /* ===== CONTACT ===== */
+        #contact { text-align: center; }
+
+        .contact-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .contact-card:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: var(--accent-dim);
+        }
+
+        .contact-card i {
+            color: var(--accent);
+            font-size: 1.125rem;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+        }
+
+        footer .divider { margin-bottom: 2rem; }
+
+        /* ===== REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-toggle { display: block; }
+
+            .nav-links {
+                position: fixed;
+                top: var(--header-h);
+                left: 0;
+                right: 0;
+                background: rgba(9, 9, 11, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+                padding: 1rem 0;
+                transform: translateY(-120%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.nav-open {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .nav-links li { width: 100%; text-align: center; }
+            .nav-links a { display: block; padding: 0.75rem; font-size: 0.9375rem; }
+
+            section { padding: 4rem 0; }
+
+            .about-stats { grid-template-columns: 1fr; }
+
+            .projects-grid { grid-template-columns: 1fr; }
+
+            .hero-content { padding: 6rem 1.5rem 2rem; }
+
+            .exp-header { flex-direction: column; }
+        }
+
+        /* ===== FOCUS ===== */
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header id="header">
+        <nav>
+            <a class="logo" href="#">mariana<span>.</span></a>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-label reveal">Product Leader &middot; AI-Driven Delivery</div>
+            <h1 class="reveal">
+                <span class="gradient">Mariana</span><br>Quinto Marques
+            </h1>
+            <p class="hero-desc reveal">Product leader who builds end-to-end delivery systems that actually work. I design how teams discover, validate, and ship - then embed AI into the process so they move faster without cutting corners.</p>
+            <div class="hero-actions reveal">
+                <a href="#contact" class="btn-primary">Get in touch <i class="fa-solid fa-arrow-right" style="font-size:0.75rem"></i></a>
+                <div class="hero-links">
+                    <a href="https://linkedin.com/in/mariana-qmarques" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://github.com/mariana-quinto-marques" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ABOUT -->
+    <section id="about">
+        <div class="container">
+            <div class="section-label reveal">About</div>
+            <h2 class="section-heading reveal">Strategy to shipped product, end to end</h2>
+            <div class="about-content">
+                <div class="about-bio reveal">
+                    <p>I don't just manage backlogs - I set product direction, define how teams work, and make sure what we ship actually solves the right problems. Currently leading product strategy for a multi-tenant SaaS platform in regulated financial services, where I own the full lifecycle from discovery through delivery across a squad of ten.</p>
+                    <p>What sets me apart is that I design the ways of working, not just the product. I built and rolled out an AI-assisted operating model across my organisation - rethinking how we run discovery, write specs, do QA, and make decisions. It's not about adding AI tooling on top of a broken process; it's about redesigning the process with AI as a core capability.</p>
+                    <p>I started hands-on as a Product Engineer, so I bring genuine technical fluency to architecture discussions, trade-off conversations, and engineering partnerships. I've shipped greenfield platforms in months, not years - in environments where compliance and regulation make speed hard by default.</p>
+                    <div class="about-meta">
+                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> London, UK</div>
+                        <div class="meta-item"><i class="fa-solid fa-building"></i> Azur Technology</div>
+                        <div class="meta-item"><i class="fa-solid fa-graduation-cap"></i> LSE &amp; Sussex</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-stats reveal">
+                <div class="stat-card">
+                    <div class="stat-value">~70%</div>
+                    <div class="stat-label">Fewer post-release defects after redesigning discovery &amp; QA</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">~30%</div>
+                    <div class="stat-label">Faster delivery cycles through AI-assisted ways of working</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5 mo</div>
+                    <div class="stat-label">Greenfield platform to production in regulated finserv</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+        <div class="container">
+            <div class="section-label reveal">Experience</div>
+            <h2 class="section-heading reveal">Career progression</h2>
+
+            <div class="exp-company reveal">
+                <div class="exp-header">
+                    <span class="exp-company-name">Azur Technology</span>
+                    <span class="exp-period">2023 - Present</span>
+                </div>
+                <div class="exp-roles">
+                    <div class="exp-role">
+                        <div class="exp-role-header">
+                            <span class="exp-role-title">Product Manager, Core Platform</span>
+                            <span class="exp-role-dates">2026 - Present</span>
+                        </div>
+                        <ul>
+                            <li>Set product strategy and quarterly priorities for the company's core SaaS platform, balancing revenue targets, client needs, and technical debt across a multi-tenant architecture.</li>
+                            <li>Redesigned the team's end-to-end discovery-to-delivery process - from how we identify opportunities and validate assumptions, through to how we spec, build, test, and release. The result was a ~70% drop in post-release defects.</li>
+                            <li>Designed and embedded an AI-powered operating model across the organisation: AI-assisted discovery synthesis, specification writing, QA, and decision-making. Adopted company-wide, it cut delivery cycle time by ~30%.</li>
+                            <li>Lead a cross-functional squad of 10 across engineering, QA, and analysis - setting the cadence, rituals, and quality bar for how we work together.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-role">
+                        <div class="exp-role-header">
+                            <span class="exp-role-title">Client Product Manager</span>
+                            <span class="exp-role-dates">2025 - 2026</span>
+                        </div>
+                        <ul>
+                            <li>Took two greenfield platforms from zero to production in regulated insurance - one in 5 months, another in 3. Both involved pricing engines, document automation, compliance reporting, and claims workflows.</li>
+                            <li>Ran end-to-end product delivery: user research, problem framing, solution design, sprint planning, stakeholder alignment, and go-live. Led squads of 5+ engineers, QA, and domain experts.</li>
+                            <li>Automated financial and compliance reporting workflows, cutting manual effort by 80% and freeing teams to focus on higher-value work.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-role">
+                        <div class="exp-role-header">
+                            <span class="exp-role-title">Product Engineer</span>
+                            <span class="exp-role-dates">2023 - 2024</span>
+                        </div>
+                        <ul>
+                            <li>Hands-on solution design and development of platform features in a regulated environment - this is where I built the technical fluency that now shapes how I partner with engineering as a PM.</li>
+                            <li>Owned release coordination, QA standards, and compliance sign-off processes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exp-company reveal">
+                <div class="exp-header">
+                    <span class="exp-company-name">Publicis Sapient</span>
+                    <span class="exp-period">2021 - 2023</span>
+                </div>
+                <div class="exp-roles">
+                    <div class="exp-role">
+                        <div class="exp-role-header">
+                            <span class="exp-role-title">Associate Product Manager</span>
+                            <span class="exp-role-dates">2022 - 2023</span>
+                        </div>
+                        <ul>
+                            <li>Shipped B2C features on Nissan's Owner Portal, partnering across engineering, UX, and analytics to move from hypothesis to measurable outcome.</li>
+                            <li>Ran A/B testing and funnel analysis to improve engagement and conversion - building the data-informed instincts I now apply to product strategy.</li>
+                            <li>Mentored junior PMs on stakeholder communication, story writing, and running effective ceremonies.</li>
+                        </ul>
+                    </div>
+                    <div class="exp-role">
+                        <div class="exp-role-header">
+                            <span class="exp-role-title">Junior Associate Product Manager</span>
+                            <span class="exp-role-dates">2021 - 2022</span>
+                        </div>
+                        <ul>
+                            <li>Cut my teeth on Uniper's B2B energy trading platform - backlog ownership, stakeholder workshops, and learning how complex domains require disciplined product thinking.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="container">
+            <div class="section-label reveal">Key Projects</div>
+            <h2 class="section-heading reveal">Things I've shipped</h2>
+            <p class="section-desc reveal">Products and systems I've taken from zero to production.</p>
+            <div class="projects-grid">
+                <article class="project-card reveal">
+                    <div class="project-icon"><i class="fa-solid fa-robot"></i></div>
+                    <h3>AI-Powered Operating Model</h3>
+                    <p>Designed a new way of working that weaves AI into every stage of product delivery - from discovery synthesis and spec writing to QA and stakeholder reporting. Not a tool rollout; a fundamental process redesign adopted across the company.</p>
+                    <div class="project-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">Ways of Working</span>
+                        <span class="tag">Process Design</span>
+                        <span class="tag">Org-wide</span>
+                    </div>
+                </article>
+                <article class="project-card reveal">
+                    <div class="project-icon"><i class="fa-solid fa-building-columns"></i></div>
+                    <h3>MGA Connect Core Platform</h3>
+                    <p>Own strategy and roadmap for a configurable multi-tenant SaaS platform in regulated financial services. Redesigned the discovery-to-delivery pipeline to ship faster with higher quality in a compliance-heavy environment.</p>
+                    <div class="project-tags">
+                        <span class="tag">SaaS</span>
+                        <span class="tag">Platform Strategy</span>
+                        <span class="tag">Insurance</span>
+                    </div>
+                </article>
+                <article class="project-card reveal">
+                    <div class="project-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <h3>Greenfield Insurance Platforms</h3>
+                    <p>Took two regulated insurance platforms from idea to revenue-generating production - a property underwriting system (5 months) and a financial lines &amp; claims platform (3 months). End-to-end ownership from research through go-live.</p>
+                    <div class="project-tags">
+                        <span class="tag">Greenfield</span>
+                        <span class="tag">Underwriting</span>
+                        <span class="tag">Claims</span>
+                        <span class="tag">Rapid Delivery</span>
+                    </div>
+                    <a href="https://www.azurtechnology.com/resources/case-studies/euclid-from-legacy-to-leading-edge/" target="_blank" rel="noopener noreferrer" class="case-study-link">Read case study <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- SIDE PROJECTS -->
+    <section id="side-projects">
+        <div class="container">
+            <div class="section-label reveal">Side Projects</div>
+            <h2 class="section-heading reveal">Things I build for fun</h2>
+            <div class="projects-grid">
+                <article class="project-card reveal">
+                    <div class="project-icon"><i class="fa-solid fa-water"></i></div>
+                    <h3>Ondas</h3>
+                    <p>A forecast app for water sports in Portugal. Unlike most apps that only cover surf, Ondas finds the best spots for surfing, kitesurfing, windsurfing, and paddle based on real-time conditions, swell, and wind data.</p>
+                    <div class="project-tags">
+                        <span class="tag">Surf</span>
+                        <span class="tag">Kitesurf</span>
+                        <span class="tag">Windsurf</span>
+                        <span class="tag">Portugal</span>
+                    </div>
+                    <div style="display:flex;gap:0.625rem;flex-wrap:wrap">
+                        <a href="https://ondas-phi.vercel.app/" target="_blank" rel="noopener noreferrer" class="case-study-link">Try it live <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        <a href="ondas-how-i-built-this.html" class="case-study-link" style="background:var(--bg-elevated);color:var(--text);">How I built this <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- EDUCATION + TOOLS -->
+    <section id="education">
+        <div class="container">
+            <div class="section-label reveal">Education</div>
+            <h2 class="section-heading reveal">Academic background</h2>
+            <div class="edu-grid reveal">
+                <div class="edu-card">
+                    <div class="edu-degree">MSc Management, Information Systems &amp; Digital Innovation</div>
+                    <div class="edu-school">London School of Economics (LSE)</div>
+                    <div class="edu-detail">Distinction - 2021</div>
+                    <div class="edu-highlight"><i class="fa-solid fa-trophy"></i> Winning Team, LSE Sprint Week Challenge 2020 with Visa &amp; Roland Berger. Built a social-fuelled fraud detection concept.</div>
+                </div>
+                <div class="edu-card">
+                    <div class="edu-degree">BSc Management &amp; Marketing</div>
+                    <div class="edu-school">University of Sussex</div>
+                    <div class="edu-detail">First-Class Honours - 2019</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <div class="section-label reveal">Tools &amp; Stack</div>
+                <h2 class="section-heading reveal" style="margin-bottom: 1.5rem;">What I work with</h2>
+                <div class="tools-wrap reveal">
+                    <span class="tool-tag">Jira</span>
+                    <span class="tool-tag">Jira Product Discovery</span>
+                    <span class="tool-tag">Confluence</span>
+                    <span class="tool-tag">Claude Code</span>
+                    <span class="tool-tag">Figma</span>
+                    <span class="tool-tag">Miro</span>
+                    <span class="tool-tag">Lucidchart</span>
+                    <span class="tool-tag">Notion</span>
+                    <span class="tool-tag">Salesforce</span>
+                    <span class="tool-tag">Azure DevOps</span>
+                    <span class="tool-tag">Google Analytics</span>
+                    <span class="tool-tag">Power BI</span>
+                    <span class="tool-tag">Adobe Experience Manager</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-label reveal">Contact</div>
+            <h2 class="section-heading reveal">Let's connect</h2>
+            <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;">Open to Head of Product, Product Lead, and AI Product Manager roles. Always happy to talk about product strategy, AI-assisted delivery, or building in complex domains.</p>
+            <div class="contact-grid reveal">
+                <a href="https://linkedin.com/in/mariana-qmarques" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <i class="fa-brands fa-linkedin-in"></i> LinkedIn
+                </a>
+                <a href="https://github.com/mariana-quinto-marques" target="_blank" rel="noopener noreferrer" class="contact-card">
+                    <i class="fa-brands fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <hr class="divider">
+        <p>&copy; 2026 Mariana Quinto Marques</p>
+    </footer>
+
+    <script>
+        // Header scroll
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Mobile nav
+        const navToggle = document.querySelector('.nav-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('nav-open');
+            const icon = navToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('nav-open');
+                navToggle.querySelector('i').classList.add('fa-bars');
+                navToggle.querySelector('i').classList.remove('fa-xmark');
+            });
+        });
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Active nav
+        const sections = document.querySelectorAll('section[id]');
+        const allNavLinks = document.querySelectorAll('.nav-links a');
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    allNavLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+        sections.forEach(s => navObserver.observe(s));
+    </script>
+</body>
+</html>

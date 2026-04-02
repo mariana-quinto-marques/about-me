@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How I Built ONDAS | Mariana Quinto Marques</title>
+    <meta name="description" content="The story behind ONDAS - a real-time water sports conditions app for Portugal covering surf, kitesurf, windsurf, and paddle.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-card: #18181b;
+            --bg-elevated: #27272a;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --accent: #06b6d4;
+            --accent-dim: rgba(6, 182, 212, 0.12);
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --max-w: 760px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .container {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* NAV */
+        .back-nav {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--text); text-decoration: none; }
+
+        /* HEADER */
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .article-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .article-intro {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .article-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(6,182,212,0.25); text-decoration: none; }
+        .btn-secondary { background: var(--bg-elevated); color: var(--text); }
+        .btn-secondary:hover { background: var(--bg-card); text-decoration: none; }
+
+        /* CONTENT */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            border: none;
+            margin: 3rem 0;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.25rem;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            color: var(--text-secondary);
+            padding-left: 1.25rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        li strong { color: var(--text); font-weight: 600; }
+
+        /* TECH TABLE */
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-table th,
+        .tech-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.9375rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-table th {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tech-table td {
+            color: var(--text-secondary);
+        }
+
+        .tech-table td:first-child {
+            color: var(--text);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .tech-table tr:hover td { background: var(--bg-card); }
+
+        /* FEATURE CARDS */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+
+        .feature-card:hover { border-color: var(--border-hover); }
+
+        .feature-card h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        /* CALLOUT */
+        .callout {
+            background: var(--accent-dim);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .callout p {
+            color: var(--text);
+            margin-bottom: 0;
+            font-size: 0.9375rem;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+        }
+
+        /* FOCUS */
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (max-width: 640px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .tech-table th, .tech-table td { padding: 0.625rem 0.75rem; font-size: 0.875rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to portfolio</a>
+        </nav>
+
+        <article>
+            <!-- HEADER -->
+            <header class="article-header">
+                <div class="article-label">Side Project</div>
+                <h1>How I Built ONDAS</h1>
+                <p class="article-intro">ONDAS is a real-time water sports conditions app for Portugal, showing live wave, wind, and weather data for 25 surf, kitesurf, windsurf, and paddle spots across the country.</p>
+                <div class="article-links">
+                    <a href="https://ondas-phi.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Try it live <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.6875rem"></i></a>
+                    <a href="https://github.com/mariana-quinto-marques/ONDAS" target="_blank" rel="noopener noreferrer" class="btn btn-secondary"><i class="fa-brands fa-github"></i> Source code</a>
+                </div>
+            </header>
+
+            <hr class="divider">
+
+            <!-- THE IDEA -->
+            <section>
+                <h2>The Idea</h2>
+                <p>As someone who loves the Portuguese coast, I wanted a single place to check conditions across all the best water sports spots. From Moledo in the north to the Algarve, plus the Azores and Madeira. No more checking 5 different websites.</p>
+                <p>Most forecast apps only cover surfing. ONDAS covers surf, kitesurf, windsurf, and paddle, each with its own scoring algorithm tailored to what actually matters for that sport.</p>
+            </section>
+
+            <hr class="divider">
+
+            <!-- TECH STACK -->
+            <section>
+                <h2>Tech Stack</h2>
+                <table class="tech-table">
+                    <thead>
+                        <tr><th>Layer</th><th>Technology</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Frontend</td><td>React 19 + TypeScript</td></tr>
+                        <tr><td>Build</td><td>Vite</td></tr>
+                        <tr><td>Styling</td><td>Tailwind CSS v4</td></tr>
+                        <tr><td>Typography</td><td>DM Serif Display + Inter</td></tr>
+                        <tr><td>Maps</td><td>React-Leaflet + CartoDB Voyager tiles</td></tr>
+                        <tr><td>Data Fetching</td><td>TanStack Query v5</td></tr>
+                        <tr><td>State</td><td>Zustand (localStorage persistence)</td></tr>
+                        <tr><td>APIs</td><td>Open-Meteo Marine &amp; Weather (free, no keys)</td></tr>
+                        <tr><td>PWA</td><td>vite-plugin-pwa</td></tr>
+                        <tr><td>Hosting</td><td>Vercel</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr class="divider">
+
+            <!-- KEY FEATURES -->
+            <section>
+                <h2>Key Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-wave-square" style="color:var(--accent);margin-right:0.375rem"></i> Real-time conditions</h4>
+                        <p>Wave height, swell, wind speed/direction, temperature, UV, and weather for every spot, updated every 15 minutes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-ranking-star" style="color:var(--accent);margin-right:0.375rem"></i> Smart scoring</h4>
+                        <p>Each sport has its own condition thresholds that color-code spots as Good, Fair, or Poor. Spots auto-sort best to worst.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-map-location-dot" style="color:var(--accent);margin-right:0.375rem"></i> Interactive map</h4>
+                        <p>Portugal's coast with color-coded markers on CartoDB Voyager tiles. Map-first layout with floating card carousel.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-gauge-high" style="color:var(--accent);margin-right:0.375rem"></i> Spot details</h4>
+                        <p>Full dashboard with wind compass, wave indicator, 24h forecast timeline, and approximate tide chart.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-users" style="color:var(--accent);margin-right:0.375rem"></i> Community reports</h4>
+                        <p>Users can rate conditions, report crowd levels, and leave notes. Stored locally for privacy.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-mobile-screen" style="color:var(--accent);margin-right:0.375rem"></i> Mobile-first PWA</h4>
+                        <p>25 curated spots across 7 regions, each with fun facts. Fully responsive, installable as a PWA.</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="divider">
+
+            <!-- DATA ARCHITECTURE -->
+            <section>
+                <h2>Data Architecture</h2>
+                <div class="callout">
+                    <p>The app makes just <strong>2 API calls</strong> to load conditions for all 25 spots simultaneously, by batching coordinates in a single Open-Meteo request.</p>
+                </div>
+                <p>Individual spot pages fetch 3-day hourly forecasts. All responses are cached for 15 minutes via TanStack Query.</p>
+                <p>Tide data uses an approximate semi-diurnal model calibrated for Portugal's coast (~12h 25m cycle), since free tide APIs don't exist.</p>
+            </section>
+
+            <hr class="divider">
+
+            <!-- DESIGN -->
+            <section>
+                <h2>Design</h2>
+                <p>The visual identity is inspired by vintage Portuguese travel posters. Warm cream backgrounds, elegant serif typography (DM Serif Display), deep ocean teal accents, and white glassmorphism cards. The goal was to feel like a premium travel editorial, not a typical weather app.</p>
+            </section>
+
+            <hr class="divider">
+
+            <!-- WHAT I LEARNED -->
+            <section>
+                <h2>What I Learned</h2>
+                <ul>
+                    <li>Working with real-time weather/marine APIs and batching coordinate requests for performance</li>
+                    <li>Building a scoring algorithm that translates raw meteorological data into human-friendly condition ratings</li>
+                    <li>Leaflet map customisation with static maps, custom tile layers, and interactive markers</li>
+                    <li>Mobile-first design patterns: floating overlays, horizontal card carousels, glassmorphism on light backgrounds</li>
+                    <li>PWA configuration with offline caching strategies for API data and map tiles</li>
+                </ul>
+            </section>
+        </article>
+    </div>
+
+    <footer>
+        <hr class="divider" style="max-width:760px;margin:0 auto 2rem">
+        <p>&copy; 2026 Mariana Quinto Marques</p>
+    </footer>
+
+</body>
+</html>
