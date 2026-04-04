@@ -382,6 +382,21 @@
 
             <hr class="divider">
 
+            <!-- REAL-WORLD DATA -->
+            <section>
+                <h2>How It Would Work in Production</h2>
+                <p>The typed dataset is a stand-in for what, in a real PE context, would come from several different sources depending on the firm's stack:</p>
+                <ul>
+                    <li><strong>Portfolio company financials</strong> - pulled from ERP exports (NetSuite, SAP, Xero) or a central data warehouse that aggregates monthly management accounts across the portfolio</li>
+                    <li><strong>Value creation initiatives</strong> - typically owned in a portfolio management system like Dynamo, Allvue, or a custom Airtable/Notion setup; the dashboard would replace the spreadsheet layer on top of that</li>
+                    <li><strong>IRR and MOIC calculations</strong> - sourced from the fund's finance team or a deal management platform, not computed in the UI; the dashboard consumes and displays them</li>
+                    <li><strong>Data room feeds</strong> - for newer investments still in diligence, structured document stores (Datasite, Intralinks) expose APIs that could feed early-stage KPI snapshots</li>
+                </ul>
+                <p>The typed data model deliberately mirrors what those real sources would return: each company has an ID, sector, financial time series, and a list of named initiatives with owners, status, and projected EBITDA impact. Swapping the static modules for API calls or a data layer (GraphQL, REST, or direct DB queries) would be the main production change - the component and hook architecture is already built to support it.</p>
+            </section>
+
+            <hr class="divider">
+
             <!-- DESIGN -->
             <section>
                 <h2>Design</h2>
