@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How I Built the SME Credit Decision Tool | Mariana Quinto Marques</title>
+    <meta name="description" content="The story behind an SME loan credit decision tool with a weighted scoring engine, DSCR analysis, amortization, and portfolio exposure tracking.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-card: #18181b;
+            --bg-elevated: #27272a;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --accent: #06b6d4;
+            --accent-dim: rgba(6, 182, 212, 0.12);
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --max-w: 760px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .container {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .back-nav {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--text); text-decoration: none; }
+
+        .article-header { margin-bottom: 3rem; }
+
+        .article-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .article-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .article-intro {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .article-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(6,182,212,0.25); text-decoration: none; }
+        .btn-secondary { background: var(--bg-elevated); color: var(--text); }
+        .btn-secondary:hover { background: var(--bg-card); text-decoration: none; }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            border: none;
+            margin: 3rem 0;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.25rem;
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            color: var(--text-secondary);
+            padding-left: 1.25rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        li strong { color: var(--text); font-weight: 600; }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-table th,
+        .tech-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.9375rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-table th {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tech-table td { color: var(--text-secondary); }
+        .tech-table td:first-child { color: var(--text); font-weight: 500; white-space: nowrap; }
+        .tech-table tr:hover td { background: var(--bg-card); }
+
+        .scoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+
+        .scoring-table th,
+        .scoring-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .scoring-table th {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .scoring-table td { color: var(--text-secondary); }
+        .scoring-table td:first-child { color: var(--text); font-weight: 500; }
+        .scoring-table td:nth-child(2) {
+            font-family: var(--mono);
+            font-size: 0.8125rem;
+            color: var(--accent);
+        }
+        .scoring-table tr:hover td { background: var(--bg-card); }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+
+        .feature-card:hover { border-color: var(--border-hover); }
+
+        .feature-card h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 0.375rem;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .callout {
+            background: var(--accent-dim);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .callout p {
+            color: var(--text);
+            margin-bottom: 0;
+            font-size: 0.9375rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+        }
+
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (max-width: 640px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .tech-table th, .tech-table td,
+            .scoring-table th, .scoring-table td { padding: 0.625rem 0.75rem; font-size: 0.875rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to portfolio</a>
+        </nav>
+
+        <article>
+            <header class="article-header">
+                <div class="article-label">Side Project</div>
+                <h1>How I Built the SME Credit Decision Tool</h1>
+                <p class="article-intro">A full-stack loan underwriting tool for SME lenders. Enter a business's financials, get back a risk score, DSCR analysis, automated credit flags, amortization schedule, and three loan scenarios to compare.</p>
+                <div class="article-links">
+                    <a href="https://sme-credit-decision-tool.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Try it live <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.6875rem"></i></a>
+                </div>
+            </header>
+
+            <hr class="divider">
+
+            <section>
+                <h2>The Idea</h2>
+                <p>SME lending decisions are often made in spreadsheets, with analysts manually calculating DSCR, looking up industry benchmarks, and flagging risks in a notes field. Having worked in regulated financial services, I wanted to model what a purpose-built credit underwriting tool could look like - one where the scoring logic is transparent, auditable, and consistent across every application.</p>
+                <p>The goal was a tool an SME lender's credit team could actually use: enter the basics, get a defensible recommendation with the reasoning broken out, not just a number.</p>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>Tech Stack</h2>
+                <table class="tech-table">
+                    <thead>
+                        <tr><th>Layer</th><th>Technology</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Client</td><td>React 18 + Vite</td></tr>
+                        <tr><td>Server</td><td>Node.js + Express</td></tr>
+                        <tr><td>Monorepo</td><td>npm workspaces (client / server)</td></tr>
+                        <tr><td>Styling</td><td>Tailwind CSS v3</td></tr>
+                        <tr><td>Charts</td><td>Recharts (amortization, risk gauge)</td></tr>
+                        <tr><td>Routing</td><td>React Router v6</td></tr>
+                        <tr><td>HTTP</td><td>Axios</td></tr>
+                        <tr><td>Validation</td><td>express-validator</td></tr>
+                        <tr><td>Hosting</td><td>Vercel (serverless functions for the API)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>The Credit Engine</h2>
+                <div class="callout">
+                    <p>DSCR is the primary underwriting signal - but the final score is a <strong>5-factor weighted model</strong> that accounts for margin quality, business maturity, existing leverage, and industry risk alongside cash flow coverage.</p>
+                </div>
+                <p>The scoring model runs entirely on the server, so the weights and logic are never exposed to the client:</p>
+                <table class="scoring-table">
+                    <thead>
+                        <tr><th>Factor</th><th>Weight</th><th>How it's scored</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>DSCR Coverage</td><td>35%</td><td>Linear scale capped at 2.5x</td></tr>
+                        <tr><td>Debt-to-Revenue</td><td>15%</td><td>Lower is better; 40%+ scores zero</td></tr>
+                        <tr><td>Margin Quality</td><td>15%</td><td>Piecewise: below 10% / 15% / 25%</td></tr>
+                        <tr><td>Business Maturity</td><td>15%</td><td>Non-linear sqrt curve on years trading</td></tr>
+                        <tr><td>Industry Risk</td><td>20%</td><td>Lookup table across 10 sectors</td></tr>
+                    </tbody>
+                </table>
+                <p>The composite score feeds a continuous interest rate calculation - rather than banding into fixed tiers, the rate adjusts smoothly with the score, with further discounts for business tenure and industry adjustments layered on top.</p>
+                <p>Loan sizing is constrained by two independent caps: a cash-flow cap (available operating income after existing debt, with a 1.25x DSCR buffer) and a revenue multiple cap (max 3x annual revenue). The lower of the two becomes the maximum lendable amount.</p>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>Key Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-file-invoice-dollar" style="color:var(--accent);margin-right:0.375rem"></i> Loan application form</h4>
+                        <p>Business financials input: monthly revenue, operating margin, existing debt, years trading, sector, and requested loan details.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-gauge-high" style="color:var(--accent);margin-right:0.375rem"></i> Risk gauge</h4>
+                        <p>Visual dial showing the composite risk score and LOW / MEDIUM / HIGH classification with the DSCR value front and centre.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-triangle-exclamation" style="color:var(--accent);margin-right:0.375rem"></i> Credit flags</h4>
+                        <p>Automated warnings (thin margin, high leverage), cautions (startup risk, marginal DSCR, concentration), and positive indicators (strong cash flow, low leverage).</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-sliders" style="color:var(--accent);margin-right:0.375rem"></i> Loan scenarios</h4>
+                        <p>Three alternative structures generated automatically: conservative, recommended, and stretch - each with monthly payment, DSCR impact, and interest rate.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-table" style="color:var(--accent);margin-right:0.375rem"></i> Amortization schedule</h4>
+                        <p>Full month-by-month breakdown of principal, interest, and outstanding balance, with a Recharts area chart showing the paydown curve.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-chart-pie" style="color:var(--accent);margin-right:0.375rem"></i> Portfolio exposure</h4>
+                        <p>Separate view tracking approved loans across the book: sector concentration, risk distribution, and total exposure - the view a credit manager would use.</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>How It Would Work in Production</h2>
+                <p>The current version takes manual inputs. In a real lending context, most of that data would arrive automatically:</p>
+                <ul>
+                    <li><strong>Open banking</strong> - revenue and cash flow verified directly from bank feeds via Plaid, TrueLayer, or Yapily, rather than self-reported figures</li>
+                    <li><strong>Companies House</strong> - years in business, registered sector, and director history pulled automatically on company number lookup</li>
+                    <li><strong>Credit bureau data</strong> - Experian or Equifax commercial scores layered in as an additional input to the risk model, replacing or supplementing the manual margin input</li>
+                    <li><strong>Existing debt verification</strong> - HMRC filing data or accountant-certified management accounts for debt obligations, removing the self-reported element that creates the most model risk</li>
+                    <li><strong>Decision audit log</strong> - every application, score, and decision stored immutably for FCA compliance and fair lending review</li>
+                </ul>
+                <p>The credit engine itself - the scoring weights, flag thresholds, and approval logic - would be tuned against the lender's actual book performance over time. The architecture keeps the engine entirely server-side and separate from the UI precisely so it can be iterated on, A/B tested, or replaced without touching the frontend.</p>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>What I Learned</h2>
+                <ul>
+                    <li>Designing a weighted scoring model with transparent, auditable factor breakdowns rather than a black-box number</li>
+                    <li>Full-stack monorepo structure with npm workspaces - keeping client and server in sync without over-engineering the setup</li>
+                    <li>How loan sizing constraints work in practice: cash flow cap, revenue multiple cap, and tier-specific minimum DSCR thresholds</li>
+                    <li>The difference between what a credit model needs to be correct and what it needs to be trusted - presentation and explainability matter as much as the maths</li>
+                    <li>Deploying an Express API as Vercel serverless functions with a separate React client in the same repo</li>
+                </ul>
+            </section>
+        </article>
+    </div>
+
+    <footer>
+        <hr class="divider" style="max-width:760px;margin:0 auto 2rem">
+        <p>&copy; 2026 Mariana Quinto Marques</p>
+    </footer>
+
+</body>
+</html>
