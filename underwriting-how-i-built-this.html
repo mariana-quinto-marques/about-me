@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How I Built RiskLens | Mariana Quinto Marques</title>
+    <meta name="description" content="The story behind RiskLens - an insurance underwriting and risk scoring platform built with React, FastAPI, and a transparent rule-based scoring engine.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-card: #18181b;
+            --bg-elevated: #27272a;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --accent: #06b6d4;
+            --accent-dim: rgba(6, 182, 212, 0.12);
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --max-w: 760px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.015;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .container { max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; }
+
+        .back-nav { padding: 1.25rem 0; border-bottom: 1px solid var(--border); margin-bottom: 3rem; }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--text); text-decoration: none; }
+
+        .article-header { margin-bottom: 3rem; }
+
+        .article-label {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .article-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+        }
+
+        .article-intro { font-size: 1.125rem; color: var(--text-secondary); line-height: 1.7; }
+
+        .article-links { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-primary:hover { box-shadow: 0 0 20px rgba(6,182,212,0.25); text-decoration: none; }
+        .btn-secondary { background: var(--bg-elevated); color: var(--text); }
+        .btn-secondary:hover { background: var(--bg-card); text-decoration: none; }
+
+        .divider { height: 1px; background: var(--border); border: none; margin: 3rem 0; }
+
+        h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 1.25rem; }
+        h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; }
+        p { color: var(--text-secondary); margin-bottom: 1.25rem; }
+
+        ul { list-style: none; display: flex; flex-direction: column; gap: 0.625rem; margin-bottom: 1.5rem; }
+
+        li { color: var(--text-secondary); padding-left: 1.25rem; position: relative; line-height: 1.6; }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        li strong { color: var(--text); font-weight: 600; }
+
+        .tech-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+
+        .tech-table th, .tech-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.9375rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-table th { font-weight: 600; color: var(--text); font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tech-table td { color: var(--text-secondary); }
+        .tech-table td:first-child { color: var(--text); font-weight: 500; white-space: nowrap; }
+        .tech-table tr:hover td { background: var(--bg-card); }
+
+        .rules-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+
+        .rules-table th, .rules-table td {
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rules-table th { font-weight: 600; color: var(--text); font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .rules-table td { color: var(--text-secondary); }
+        .rules-table td:first-child { color: var(--text); font-weight: 500; }
+        .rules-table td:nth-child(2) { font-family: var(--mono); font-size: 0.8125rem; color: var(--accent); }
+        .rules-table tr:hover td { background: var(--bg-card); }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+
+        .feature-card:hover { border-color: var(--border-hover); }
+        .feature-card h4 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.375rem; }
+        .feature-card p { font-size: 0.875rem; color: var(--text-tertiary); margin-bottom: 0; line-height: 1.5; }
+
+        .callout {
+            background: var(--accent-dim);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .callout p { color: var(--text); margin-bottom: 0; font-size: 0.9375rem; }
+
+        footer { text-align: center; padding: 3rem 1.5rem; color: var(--text-tertiary); font-size: 0.8125rem; }
+
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        @media (max-width: 640px) {
+            .feature-grid { grid-template-columns: 1fr; }
+            .tech-table th, .tech-table td,
+            .rules-table th, .rules-table td { padding: 0.625rem 0.75rem; font-size: 0.875rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="back-nav">
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to portfolio</a>
+        </nav>
+
+        <article>
+            <header class="article-header">
+                <div class="article-label">Side Project</div>
+                <h1>How I Built RiskLens</h1>
+                <p class="article-intro">An insurance underwriting and risk scoring platform for SME submissions. Submit a business's risk profile, get a score, a decision (Approved / Referred / Declined), a rule-by-rule explanation of how the score was reached, and a premium estimate. Portfolio dashboard included.</p>
+                <div class="article-links">
+                    <a href="https://underwriting-risk-scoring.vercel.app/portfolio" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Try it live <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.6875rem"></i></a>
+                </div>
+            </header>
+
+            <hr class="divider">
+
+            <section>
+                <h2>The Idea</h2>
+                <p>Having built two insurance platforms at Azur Technology - a property underwriting system and a financial lines platform - I know how underwriting decisions actually get made in practice: a mix of gut feel, spreadsheets, and rule books that live in someone's head. The question I wanted to answer was: what does a modern, explainable underwriting tool look like?</p>
+                <p>The hardest part of insurance underwriting isn't the maths - it's making the decision auditable. A rate can be justified. A referral needs a reason. RiskLens makes the scoring logic transparent: every rule that touched the submission is shown, with its exact adjustment and the reasoning behind it. That's the thing most legacy underwriting systems don't do well.</p>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>Tech Stack</h2>
+                <div class="callout">
+                    <p>This is the only project in this portfolio with a <strong>Python backend</strong>. FastAPI was the right choice here - the scoring engine is pure Python logic, and FastAPI's automatic Swagger docs made it easy to test the API directly without building a separate client first.</p>
+                </div>
+                <table class="tech-table">
+                    <thead>
+                        <tr><th>Layer</th><th>Technology</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Frontend</td><td>React 19 + TypeScript + Vite</td></tr>
+                        <tr><td>Styling</td><td>Tailwind CSS v4</td></tr>
+                        <tr><td>Charts</td><td>Recharts</td></tr>
+                        <tr><td>Icons</td><td>Lucide React</td></tr>
+                        <tr><td>Backend</td><td>Python + FastAPI</td></tr>
+                        <tr><td>ORM / DB</td><td>SQLAlchemy + SQLite</td></tr>
+                        <tr><td>Validation</td><td>Pydantic</td></tr>
+                        <tr><td>Routing</td><td>React Router v7</td></tr>
+                        <tr><td>HTTP</td><td>Axios</td></tr>
+                        <tr><td>Hosting</td><td>Vercel (frontend + Python serverless functions)</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>The Scoring Engine</h2>
+                <p>The engine is a pipeline of independent rules, each returning an adjustment and a plain-English explanation. The final score is the sum of all adjustments, clamped to 0-100. Every rule is a separate function - adding, removing, or reweighting a factor means changing one place in the codebase.</p>
+                <table class="rules-table">
+                    <thead>
+                        <tr><th>Rule</th><th>Adjustment</th><th>Logic</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Base Score</td><td>+50</td><td>Starting point for all submissions</td></tr>
+                        <tr><td>Industry</td><td>0 to +20</td><td>Technology (0) to Construction (+20); 7 sectors</td></tr>
+                        <tr><td>Claims History</td><td>-10 to +25</td><td>Clean record (-10) to 5+ claims (+25)</td></tr>
+                        <tr><td>Revenue</td><td>-10 to +5</td><td>&gt;5M revenue (-10); under 500K (+5)</td></tr>
+                        <tr><td>Employee Count</td><td>-5 to +10</td><td>Micro (&lt;10 staff, -5) to large workforce (+10)</td></tr>
+                        <tr><td>Location Risk</td><td>-5 to +20</td><td>Low-risk area (-5) to very high risk (+20)</td></tr>
+                    </tbody>
+                </table>
+                <p>Score thresholds map to three decisions: 0-40 Approved, 41-70 Referred, 71-100 Declined. Within that, four rating bands (low, moderate, high, very high) feed the premium calculator independently of the decision outcome - a referred submission still gets a premium estimate at its risk rating.</p>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>Key Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-clipboard-list" style="color:var(--accent);margin-right:0.375rem"></i> Submission form</h4>
+                        <p>Capture industry sector, employee count, annual revenue, claims in last 3 years, and location risk category for any SME applicant.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-magnifying-glass-chart" style="color:var(--accent);margin-right:0.375rem"></i> Rule-by-rule explanation</h4>
+                        <p>Every scoring rule is shown on the result page with its exact adjustment and the reason behind it. No black box - the underwriter can see exactly what drove the decision.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-circle-check" style="color:var(--accent);margin-right:0.375rem"></i> Decision output</h4>
+                        <p>Approved, Referred, or Declined with a risk rating and a revenue-adjusted premium estimate. Referrals get a suggested review note.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-chart-bar" style="color:var(--accent);margin-right:0.375rem"></i> Portfolio dashboard</h4>
+                        <p>KPI cards for total submissions, approval rate, and average risk score. Charts for decision distribution and industry breakdown across the book.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-list" style="color:var(--accent);margin-right:0.375rem"></i> Submissions log</h4>
+                        <p>Paginated list of all submissions with status badges, score, and drill-down to the full result for any prior application.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fa-solid fa-database" style="color:var(--accent);margin-right:0.375rem"></i> Seeded demo data</h4>
+                        <p>45 pre-seeded submissions across all risk bands and industries so the portfolio view is populated from the first load.</p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>How It Would Work in Production</h2>
+                <p>The current version takes manual form inputs. In a real insurer or MGA, the data pipeline would look different at almost every step:</p>
+                <ul>
+                    <li><strong>Submission intake</strong> - broker portals (Acturis, Open GI) or direct digital channels would push structured submissions via API, replacing the manual form entirely for most volume</li>
+                    <li><strong>Claims data</strong> - rather than self-reported claims count, the engine would query the insurer's own claims system or market-level data (Lloyd's claims databases, IUA) to verify history automatically</li>
+                    <li><strong>Location risk</strong> - the four-tier manual input would be replaced by a postcode-level geodata lookup against flood risk (JBA Risk, Ambiental), subsidence, and crime indices - turning a subjective input into an objective one</li>
+                    <li><strong>Revenue and employee verification</strong> - Companies House filings and HMRC data to validate self-reported figures before they enter the scoring pipeline</li>
+                    <li><strong>Rating engine integration</strong> - the score and decision would feed into a downstream rating engine (Sequel Impact, Xuber) or policy admin system (Guidewire, Applied Epic) rather than generating a standalone output</li>
+                    <li><strong>Audit and compliance</strong> - every decision stored immutably with the full rule breakdown for FCA fair treatment review, complaint handling, and model governance</li>
+                </ul>
+                <p>The rule pipeline architecture is deliberately built to support this: each rule is an independent function that takes a submission object and returns an adjustment with a reason. Replacing the manual location input with a real geodata API call means changing one function, not rebuilding the engine.</p>
+            </section>
+
+            <hr class="divider">
+
+            <section>
+                <h2>What I Learned</h2>
+                <ul>
+                    <li>Building a Python FastAPI backend and deploying it as Vercel serverless functions alongside a React frontend - a different deployment model from Node.js</li>
+                    <li>Designing a rule pipeline where explainability is a first-class requirement, not an afterthought - every rule must produce a human-readable reason, not just a number</li>
+                    <li>The difference between a scoring model being correct and being trusted in a regulated context - audit trails, decision transparency, and referral logic matter as much as the score itself</li>
+                    <li>SQLAlchemy with SQLite for a lightweight but proper ORM layer - good enough for a prototype, swappable for Postgres in production without touching the query logic</li>
+                    <li>How premium calculation interacts with risk scoring in insurance: the rating band and revenue base are independent inputs to pricing, so a referred risk still gets a technically valid premium estimate</li>
+                </ul>
+            </section>
+        </article>
+    </div>
+
+    <footer>
+        <hr class="divider" style="max-width:760px;margin:0 auto 2rem">
+        <p>&copy; 2026 Mariana Quinto Marques</p>
+    </footer>
+
+</body>
+</html>
