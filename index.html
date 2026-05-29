@@ -11,26 +11,23 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..600,0,0;1,9..144,400..500,0,0&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #09090b;
-            --bg-card: #18181b;
-            --bg-card-hover: #1f1f23;
-            --bg-elevated: #27272a;
-            --border: rgba(255,255,255,0.06);
-            --border-hover: rgba(255,255,255,0.12);
-            --accent: #06b6d4;
-            --accent-dim: rgba(6, 182, 212, 0.12);
-            --accent-glow: rgba(6, 182, 212, 0.25);
-            --text: #fafafa;
-            --text-secondary: #a1a1aa;
-            --text-tertiary: #71717a;
-            --mono: 'JetBrains Mono', monospace;
+            --paper: #f6f2ea;
+            --paper-2: #fbf9f4;
+            --ink: #1f1c17;
+            --ink-soft: #4a453d;
+            --ink-faint: #8a8377;
+            --rule: #d8d1c4;
+            --rule-soft: #e7e1d6;
+            --accent: #9c3d22;
+            --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
             --sans: 'Inter', system-ui, -apple-system, sans-serif;
-            --max-w: 1080px;
-            --header-h: 64px;
+            --max-w: 1040px;
+            --header-h: 72px;
+            --aside: 220px;
+            --col-gap: 2.5rem;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,46 +35,44 @@
 
         body {
             font-family: var(--sans);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.65;
             -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
         a { color: inherit; text-decoration: none; }
-        .container { max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem; }
+        .container { max-width: var(--max-w); margin: 0 auto; padding: 0 2rem; }
 
-        /* ===== ANIMATED GRAIN OVERLAY ===== */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0.015;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        ::selection { background: var(--accent); color: var(--paper-2); }
+
+        /* Serif headings: normalize Fraunces (no wonk / no soft) */
+        .serif, .logo, #hero h1, .hero-desc, .section-heading,
+        .stat-value, .exp-company-name, .exp-role-title,
+        .edu-degree, .project-aside-title {
+            font-family: var(--serif);
+            font-optical-sizing: auto;
+            font-variation-settings: "SOFT" 0, "WONK" 0;
         }
 
         /* ===== HEADER ===== */
         header {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
-            background: rgba(9, 9, 11, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(246, 242, 234, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-bottom: 1px solid transparent;
             transition: border-color 0.3s;
         }
-
-        header.scrolled { border-bottom-color: var(--border); }
+        header.scrolled { border-bottom-color: var(--rule); }
 
         header nav {
             max-width: var(--max-w);
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
             height: var(--header-h);
             display: flex;
             align-items: center;
@@ -85,605 +80,396 @@
         }
 
         .logo {
-            font-family: var(--mono);
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.05em;
+            font-size: 1.0625rem;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            color: var(--ink);
         }
 
-        .logo span { color: var(--accent); }
-
-        .nav-links { display: flex; list-style: none; gap: 2rem; }
-
+        .nav-links { display: flex; list-style: none; gap: 2.25rem; }
         .nav-links a {
             font-size: 0.8125rem;
             font-weight: 500;
-            color: var(--text-tertiary);
-            letter-spacing: 0.02em;
-            transition: color 0.2s;
+            color: var(--ink-soft);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
         }
-
-        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
 
         .nav-toggle {
             display: none;
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 1.125rem;
+            background: none; border: none;
+            color: var(--ink);
+            font-size: 1.5rem;
+            line-height: 1;
             cursor: pointer;
-            padding: 0.5rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* ===== SHARED EDITORIAL GRID ===== */
+        /* Section number kicker + heading, all on the same left edge */
+        .kicker {
+            display: block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--accent);
+            margin-bottom: 1.1rem;
+        }
+
+        .section-heading {
+            font-weight: 400;
+            font-size: clamp(1.9rem, 4vw, 2.85rem);
+            line-height: 1.08;
+            letter-spacing: -0.015em;
+            max-width: 22ch;
+        }
+        .section-heading em { font-style: italic; }
+
+        .section-head { margin-bottom: 3rem; }
+
+        .section-desc {
+            color: var(--ink-soft);
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            max-width: 60ch;
+            margin-top: 1.25rem;
+        }
+
+        /* Two-column content rows: fixed-width aside, content shares one left edge */
+        .row {
+            display: grid;
+            grid-template-columns: var(--aside) 1fr;
+            gap: var(--col-gap);
+            align-items: start;
         }
 
         /* ===== HERO ===== */
         #hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            padding: calc(var(--header-h) + 5.5rem) 0 5.5rem;
+            border-bottom: 1px solid var(--rule);
         }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, var(--accent-dim) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6,182,212,0.04) 0%, transparent 50%);
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 720px;
-            padding: 2rem 1.5rem;
-        }
-
-        .hero-label {
-            font-family: var(--mono);
-            font-size: 0.8125rem;
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .hero-label::before {
-            content: '';
-            width: 32px;
-            height: 1px;
-            background: var(--accent);
-        }
-
         #hero h1 {
-            font-size: clamp(2.75rem, 6vw, 4.5rem);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.03em;
-            margin-bottom: 1.5rem;
+            font-weight: 400;
+            font-size: clamp(3rem, 8vw, 5.75rem);
+            line-height: 0.98;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.75rem;
         }
-
-        #hero h1 .gradient {
-            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
+        #hero h1 em { font-style: italic; }
         .hero-desc {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            max-width: 560px;
+            font-weight: 400;
+            font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+            line-height: 1.5;
+            color: var(--ink-soft);
+            max-width: 42ch;
             margin-bottom: 2.5rem;
         }
-
-        .hero-actions {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
+        .hero-desc a {
+            color: var(--accent);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            text-decoration-thickness: 1px;
         }
+        .hero-actions { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
 
         .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.75rem;
-            background: var(--accent);
-            color: #000;
+            gap: 0.6rem;
+            padding: 0.85rem 1.6rem;
+            background: var(--ink);
+            color: var(--paper-2);
+            font-size: 0.8125rem;
             font-weight: 600;
-            font-size: 0.875rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: background 0.2s;
         }
+        .btn-primary:hover { background: var(--accent); }
 
-        .btn-primary:hover {
-            box-shadow: 0 0 30px var(--accent-glow);
-            transform: translateY(-1px);
-        }
-
-        .hero-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .hero-links a {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            display: flex;
+        .text-link {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: all 0.2s;
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink);
+            border-bottom: 1px solid var(--rule);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
         }
-
-        .hero-links a:hover {
-            color: var(--accent);
-            border-color: var(--accent);
-            background: var(--accent-dim);
-        }
+        .text-link:hover { color: var(--accent); border-color: var(--accent); }
 
         /* ===== SECTIONS ===== */
-        section { padding: 6rem 0; }
-
-        .section-label {
-            font-family: var(--mono);
-            font-size: 0.75rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.75rem;
-        }
-
-        .section-heading {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-        }
-
-        .section-desc {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            max-width: 560px;
-            margin-bottom: 3rem;
-        }
-
-        .divider {
-            height: 1px;
-            background: var(--border);
-            margin: 0;
-            border: none;
-        }
+        section { padding: 5.5rem 0; }
+        section + section { border-top: 1px solid var(--rule); }
 
         /* ===== ABOUT ===== */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-        }
-
+        .about-bio { max-width: 64ch; }
         .about-bio p {
-            color: var(--text-secondary);
-            font-size: 1.0625rem;
+            color: var(--ink-soft);
+            font-size: 1.125rem;
             line-height: 1.8;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
-
+        .about-bio p:first-child::first-letter {
+            font-family: var(--serif);
+            font-variation-settings: "SOFT" 0, "WONK" 0;
+            font-size: 3.4rem;
+            line-height: 0.8;
+            float: left;
+            padding: 0.08em 0.12em 0 0;
+            color: var(--accent);
+            font-weight: 500;
+        }
         .about-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-top: 2rem;
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+            padding-top: 1.75rem;
+            border-top: 1px solid var(--rule-soft);
         }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
+        .meta-item { font-size: 0.9375rem; color: var(--ink); }
+        .meta-item span {
+            display: block;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.3rem;
         }
-
-        .meta-item i { color: var(--accent); font-size: 0.875rem; }
 
         .about-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-top: 3rem;
+            margin-top: 3.5rem;
+            border-top: 1px solid var(--rule);
         }
-
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: border-color 0.2s;
-        }
-
-        .stat-card:hover { border-color: var(--border-hover); }
-
+        .stat-card { padding: 2rem 2rem 0; }
+        .stat-card:first-child { padding-left: 0; }
+        .stat-card:last-child { padding-right: 0; }
+        .stat-card:not(:first-child) { border-left: 1px solid var(--rule-soft); }
         .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 0.25rem;
+            font-size: 2.85rem;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+            color: var(--ink);
         }
-
-        .stat-label {
-            font-size: 0.8125rem;
-            color: var(--text-tertiary);
-        }
+        .stat-label { font-size: 0.875rem; color: var(--ink-soft); line-height: 1.5; }
 
         /* ===== EXPERIENCE ===== */
-        .exp-company {
-            margin-bottom: 3rem;
-        }
-
+        .exp-company { margin-bottom: 3.5rem; }
         .exp-company:last-child { margin-bottom: 0; }
-
         .exp-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
-            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--rule);
             flex-wrap: wrap;
             gap: 0.5rem;
         }
-
-        .exp-company-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
+        .exp-company-name { font-size: 1.5rem; font-weight: 500; }
         .exp-period {
-            font-family: var(--mono);
             font-size: 0.8125rem;
-            color: var(--text-tertiary);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
         }
 
-        .exp-roles { display: flex; flex-direction: column; gap: 1.5rem; }
-
-        .exp-role {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.2s;
-        }
-
-        .exp-role:hover {
-            border-color: var(--border-hover);
-            background: var(--bg-card-hover);
-        }
-
-        .exp-role-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 0.75rem;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-        }
-
-        .exp-role-title {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
+        .exp-roles { display: flex; flex-direction: column; gap: 2.25rem; }
+        .exp-role { /* uses .row */ }
+        .exp-role-title { font-size: 1.1875rem; font-weight: 500; line-height: 1.25; margin-bottom: 0.45rem; }
         .exp-role-dates {
-            font-family: var(--mono);
             font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
             color: var(--accent);
         }
-
-        .exp-role ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
+        .exp-role ul { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
         .exp-role li {
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
-            line-height: 1.6;
-            padding-left: 1.25rem;
+            color: var(--ink-soft);
+            font-size: 1rem;
+            line-height: 1.65;
+            padding-left: 1.4rem;
             position: relative;
         }
-
         .exp-role li::before {
             content: '';
             position: absolute;
             left: 0;
-            top: 0.6em;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
+            top: 0.72em;
+            width: 14px;
+            height: 1px;
             background: var(--accent);
         }
+
+        /* ===== PROJECTS ===== */
+        .projects-list { display: flex; flex-direction: column; }
+        .project-row {
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--rule-soft);
+        }
+        .project-row:first-child { border-top: 1px solid var(--rule); }
+        .project-index {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--ink-faint);
+            margin-bottom: 0.6rem;
+        }
+        .project-aside-title { font-size: 1.3125rem; font-weight: 500; line-height: 1.2; }
+        .project-body p {
+            color: var(--ink-soft);
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            max-width: 58ch;
+        }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+        .tag {
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            padding: 0.3rem 0.7rem;
+            border: 1px solid var(--rule);
+            border-radius: 100px;
+        }
+        .project-links { display: flex; gap: 1.75rem; flex-wrap: wrap; align-items: center; }
 
         /* ===== EDUCATION ===== */
         .edu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(2, 1fr);
+            border-top: 1px solid var(--rule);
         }
-
-        .edu-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.75rem;
-            transition: border-color 0.2s;
-        }
-
-        .edu-card:hover { border-color: var(--border-hover); }
-
-        .edu-degree {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.375rem;
-        }
-
-        .edu-school {
-            font-size: 0.9375rem;
-            color: var(--accent);
-            margin-bottom: 0.375rem;
-        }
-
+        .edu-card { padding: 2rem 2rem 0; }
+        .edu-card:first-child { padding-left: 0; }
+        .edu-card:last-child { padding-right: 0; }
+        .edu-card:not(:first-child) { border-left: 1px solid var(--rule-soft); }
+        .edu-degree { font-size: 1.25rem; font-weight: 500; line-height: 1.25; margin-bottom: 0.5rem; max-width: 24ch; }
+        .edu-school { font-size: 0.9375rem; color: var(--accent); margin-bottom: 0.3rem; font-weight: 500; }
         .edu-detail {
-            font-size: 0.8125rem;
-            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            font-weight: 500;
         }
-
         .edu-highlight {
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border);
-            font-size: 0.8125rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        .edu-highlight i {
-            color: var(--accent);
-            margin-right: 0.375rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--rule-soft);
+            font-size: 0.9375rem;
+            color: var(--ink-soft);
+            line-height: 1.6;
+            max-width: 38ch;
         }
 
         /* ===== TOOLS ===== */
-        .tools-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.625rem;
-        }
-
-        .tool-tag {
-            padding: 0.5rem 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.8125rem;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-        }
-
-        .tool-tag:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: var(--accent-dim);
-        }
-
-        /* ===== KEY PROJECTS ===== */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .project-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.75rem;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .project-card:hover {
-            border-color: var(--border-hover);
-            background: var(--bg-card-hover);
-            transform: translateY(-2px);
-        }
-
-        .project-card:hover::before { opacity: 1; }
-
-        .project-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: var(--accent-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-            font-size: 1rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .project-card h3 {
-            font-size: 1.0625rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-card p {
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.375rem;
-        }
-
-        .tag {
-            font-family: var(--mono);
-            font-size: 0.6875rem;
-            color: var(--text-tertiary);
-            padding: 0.25rem 0.625rem;
-            background: var(--bg-elevated);
-            border-radius: 4px;
-        }
-
-        .case-study-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1.25rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            color: #000;
-            background: var(--accent);
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .case-study-link:hover {
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-1px);
-        }
-
-        .case-study-link i { font-size: 0.6875rem; }
-
-        /* ===== CONTACT ===== */
-        #contact { text-align: center; }
-
-        .contact-grid {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 2.5rem;
-        }
-
-        .contact-card {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 1.5rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-secondary);
-            font-size: 0.9375rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .contact-card:hover {
-            border-color: var(--accent);
-            color: var(--text);
-            background: var(--accent-dim);
-        }
-
-        .contact-card i {
-            color: var(--accent);
-            font-size: 1.125rem;
+        .tools-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0; }
+        .tool-tag { font-size: 0.9375rem; color: var(--ink-soft); }
+        .tool-tag:not(:last-child)::after {
+            content: '/';
+            color: var(--rule);
+            margin: 0 0.85rem;
         }
 
         /* ===== FOOTER ===== */
-        footer {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            color: var(--text-tertiary);
-            font-size: 0.8125rem;
+        footer { padding: 4rem 0 3rem; border-top: 1px solid var(--rule); }
+        .footer-cta {
+            font-family: var(--serif);
+            font-variation-settings: "SOFT" 0, "WONK" 0;
+            font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+            font-weight: 400;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+            max-width: 30ch;
+            margin-bottom: 2.5rem;
         }
-
-        footer .divider { margin-bottom: 2rem; }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-top: 1.75rem;
+            border-top: 1px solid var(--rule-soft);
+            font-size: 0.8125rem;
+            color: var(--ink-faint);
+        }
+        .footer-bottom a:hover { color: var(--accent); }
 
         /* ===== REVEAL ===== */
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
+        @media (max-width: 820px) {
+            :root { --aside: 180px; --col-gap: 2rem; }
+            .section-heading { max-width: none; }
+        }
+        @media (max-width: 680px) {
+            .container, header nav { padding: 0 1.25rem; }
             .nav-toggle { display: block; }
-
             .nav-links {
                 position: fixed;
-                top: var(--header-h);
-                left: 0;
-                right: 0;
-                background: rgba(9, 9, 11, 0.98);
-                backdrop-filter: blur(20px);
+                top: var(--header-h); left: 0; right: 0;
+                background: var(--paper-2);
+                border-bottom: 1px solid var(--rule);
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start;
                 gap: 0;
-                padding: 1rem 0;
+                padding: 0.5rem 1.25rem 1.25rem;
                 transform: translateY(-120%);
                 opacity: 0;
                 pointer-events: none;
                 transition: all 0.3s ease;
             }
-
-            .nav-links.nav-open {
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: auto;
-            }
-
-            .nav-links li { width: 100%; text-align: center; }
-            .nav-links a { display: block; padding: 0.75rem; font-size: 0.9375rem; }
+            .nav-links.nav-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+            .nav-links li { width: 100%; }
+            .nav-links a { display: block; padding: 0.85rem 0; border-bottom: 1px solid var(--rule-soft); width: 100%; }
 
             section { padding: 4rem 0; }
+            #hero { padding: calc(var(--header-h) + 3rem) 0 3.5rem; }
 
+            .row { grid-template-columns: 1fr; gap: 1rem; }
             .about-stats { grid-template-columns: 1fr; }
-
-            .projects-grid { grid-template-columns: 1fr; }
-
-            .hero-content { padding: 6rem 1.5rem 2rem; }
-
-            .exp-header { flex-direction: column; }
+            .stat-card { padding: 1.5rem 0; }
+            .stat-card:not(:first-child) { border-left: none; }
+            .stat-card:not(:last-child) { border-bottom: 1px solid var(--rule-soft); }
+            .edu-grid { grid-template-columns: 1fr; }
+            .edu-card { padding: 1.75rem 0; }
+            .edu-card:not(:first-child) { border-left: none; }
+            .edu-card:not(:last-child) { border-bottom: 1px solid var(--rule-soft); }
         }
 
-        /* ===== FOCUS ===== */
         a:focus-visible, button:focus-visible {
             outline: 2px solid var(--accent);
-            outline-offset: 2px;
+            outline-offset: 3px;
         }
     </style>
 </head>
@@ -692,56 +478,45 @@
     <!-- HEADER -->
     <header id="header">
         <nav>
-            <a class="logo" href="#">mariana<span>.</span></a>
-            <button class="nav-toggle" aria-label="Toggle navigation">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            <a class="logo" href="#">Mariana Quinto Marques</a>
+            <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
             <ul class="nav-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#education">Education</a></li>
-                <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <!-- HERO -->
     <section id="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <div class="hero-label reveal">Senior Product Manager &middot; AI-Native &middot; Regulated FinServ</div>
-            <h1 class="reveal">
-                <span class="gradient">Mariana</span><br>Quinto Marques
-            </h1>
-            <p class="hero-desc reveal">I ship. Two regulated platforms from blank page to production in under five months each. An AI operating model rolled out across an entire organisation. And because I build with AI outside of work too, <a href="#side-projects" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;">here are some things I've made for fun.</a></p>
+        <div class="container">
+            <span class="kicker reveal">Senior Product Manager &middot; AI-Native &middot; Regulated FinServ</span>
+            <h1 class="reveal">Mariana<br><em>Quinto Marques</em></h1>
+            <p class="hero-desc reveal">I ship. Two regulated platforms from blank page to production in under five months each. An AI operating model rolled out across an entire organisation. And because I build with AI outside of work too, <a href="#side-projects">here are some things I've made for fun.</a></p>
             <div class="hero-actions reveal">
-                <a href="#contact" class="btn-primary">Get in touch <i class="fa-solid fa-arrow-right" style="font-size:0.75rem"></i></a>
-                <div class="hero-links">
-                    <a href="https://linkedin.com/in/mariana-qmarques" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                </div>
+                <a href="https://linkedin.com/in/mariana-qmarques" target="_blank" rel="noopener noreferrer" class="btn-primary">Get in touch &#8599;</a>
             </div>
         </div>
     </section>
 
-    <hr class="divider">
-
     <!-- ABOUT -->
     <section id="about">
         <div class="container">
-            <div class="section-label reveal">About</div>
-            <h2 class="section-heading reveal">Greenfield to production. Discovery to delivery. Repeat.</h2>
-            <div class="about-content">
-                <div class="about-bio reveal">
-                    <p>I run product from blank page to shipped - owning strategy, ways of working, and delivery in regulated financial services environments where complexity is the default. Two greenfield platforms in production in under five months each. A squad of ten. The full lifecycle: research, prioritisation, spec, build, QA, go-live, and the iteration that follows.</p>
-                    <p>I built and rolled out an AI-assisted operating model across my organisation - not a tool rollout, a fundamental redesign of how we run discovery, write requirements, do QA, and make decisions. The result was a measurable step-change in delivery speed and defect rates. I think of AI as a process design problem, not a tooling one.</p>
-                    <p>I started as a Product Engineer, so I bring real technical depth to architecture calls, trade-off conversations, and engineering partnerships. I know what I'm asking for when I ask for it - and I can tell when something is genuinely hard versus when it just needs a clearer brief.</p>
-                    <div class="about-meta">
-                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> London, UK</div>
-                        <div class="meta-item"><i class="fa-solid fa-building"></i> Azur Technology</div>
-                        <div class="meta-item"><i class="fa-solid fa-graduation-cap"></i> LSE &amp; Sussex</div>
-                    </div>
-                </div>
+            <div class="section-head reveal">
+                <span class="kicker">01 — About</span>
+                <h2 class="section-heading">Greenfield to production. Discovery to delivery. <em>Repeat.</em></h2>
+            </div>
+            <div class="about-bio reveal">
+                <p>I run product from blank page to shipped — owning strategy, ways of working, and delivery in regulated financial services environments where complexity is the default. Two greenfield platforms in production in under five months each. A squad of ten. The full lifecycle: research, prioritisation, spec, build, QA, go-live, and the iteration that follows.</p>
+                <p>I built and rolled out an AI-assisted operating model across my organisation — not a tool rollout, a fundamental redesign of how we run discovery, write requirements, do QA, and make decisions. The result was a measurable step-change in delivery speed and defect rates. I think of AI as a process design problem, not a tooling one.</p>
+                <p>I started as a Product Engineer, so I bring real technical depth to architecture calls, trade-off conversations, and engineering partnerships. I know what I'm asking for when I ask for it — and I can tell when something is genuinely hard versus when it just needs a clearer brief.</p>
+            </div>
+            <div class="about-meta reveal">
+                <div class="meta-item"><span>Based in</span>London, UK</div>
+                <div class="meta-item"><span>Currently</span>Azur Technology</div>
+                <div class="meta-item"><span>Educated at</span>LSE &amp; Sussex</div>
             </div>
             <div class="about-stats reveal">
                 <div class="stat-card">
@@ -760,50 +535,50 @@
         </div>
     </section>
 
-    <hr class="divider">
-
     <!-- EXPERIENCE -->
     <section id="experience">
         <div class="container">
-            <div class="section-label reveal">Experience</div>
-            <h2 class="section-heading reveal">Career progression</h2>
+            <div class="section-head reveal">
+                <span class="kicker">02 — Experience</span>
+                <h2 class="section-heading">Career <em>progression</em></h2>
+            </div>
 
             <div class="exp-company reveal">
                 <div class="exp-header">
                     <span class="exp-company-name">Azur Technology</span>
-                    <span class="exp-period">2023 - Present</span>
+                    <span class="exp-period">2023 — Present</span>
                 </div>
                 <div class="exp-roles">
-                    <div class="exp-role">
-                        <div class="exp-role-header">
-                            <span class="exp-role-title">Product Manager, Core Platform</span>
-                            <span class="exp-role-dates">2026 - Present</span>
+                    <div class="exp-role row">
+                        <div class="exp-role-aside">
+                            <div class="exp-role-title">Product Manager, Core Platform</div>
+                            <div class="exp-role-dates">2026 — Present</div>
                         </div>
                         <ul>
                             <li>Set product strategy and quarterly priorities for the company's core SaaS platform, balancing revenue targets, client needs, and technical debt across a multi-tenant architecture.</li>
-                            <li>Redesigned the team's end-to-end discovery-to-delivery process - from how we identify opportunities and validate assumptions, through to how we spec, build, test, and release. The result was a ~70% drop in post-release defects.</li>
+                            <li>Redesigned the team's end-to-end discovery-to-delivery process — from how we identify opportunities and validate assumptions, through to how we spec, build, test, and release. The result was a ~70% drop in post-release defects.</li>
                             <li>Designed and embedded an AI-powered operating model across the organisation: AI-assisted discovery synthesis, specification writing, QA, and decision-making. Adopted company-wide, it cut delivery cycle time by ~30%.</li>
-                            <li>Lead a cross-functional squad of 10 across engineering, QA, and analysis - setting the cadence, rituals, and quality bar for how we work together.</li>
+                            <li>Lead a cross-functional squad of 10 across engineering, QA, and analysis — setting the cadence, rituals, and quality bar for how we work together.</li>
                         </ul>
                     </div>
-                    <div class="exp-role">
-                        <div class="exp-role-header">
-                            <span class="exp-role-title">Client Product Manager</span>
-                            <span class="exp-role-dates">2025 - 2026</span>
+                    <div class="exp-role row">
+                        <div class="exp-role-aside">
+                            <div class="exp-role-title">Client Product Manager</div>
+                            <div class="exp-role-dates">2025 — 2026</div>
                         </div>
                         <ul>
-                            <li>Took two greenfield platforms from zero to production in regulated insurance - one in 5 months, another in 3. Both involved pricing engines, document automation, compliance reporting, and claims workflows.</li>
+                            <li>Took two greenfield platforms from zero to production in regulated insurance — one in 5 months, another in 3. Both involved pricing engines, document automation, compliance reporting, and claims workflows.</li>
                             <li>Ran end-to-end product delivery: user research, problem framing, solution design, sprint planning, stakeholder alignment, and go-live. Led squads of 5+ engineers, QA, and domain experts.</li>
                             <li>Automated financial and compliance reporting workflows, cutting manual effort by 80% and freeing teams to focus on higher-value work.</li>
                         </ul>
                     </div>
-                    <div class="exp-role">
-                        <div class="exp-role-header">
-                            <span class="exp-role-title">Product Engineer</span>
-                            <span class="exp-role-dates">2023 - 2024</span>
+                    <div class="exp-role row">
+                        <div class="exp-role-aside">
+                            <div class="exp-role-title">Product Engineer</div>
+                            <div class="exp-role-dates">2023 — 2024</div>
                         </div>
                         <ul>
-                            <li>Hands-on solution design and development of platform features in a regulated environment - this is where I built the technical fluency that now shapes how I partner with engineering as a PM.</li>
+                            <li>Hands-on solution design and development of platform features in a regulated environment — this is where I built the technical fluency that now shapes how I partner with engineering as a PM.</li>
                             <li>Owned release coordination, QA standards, and compliance sign-off processes.</li>
                         </ul>
                     </div>
@@ -813,229 +588,239 @@
             <div class="exp-company reveal">
                 <div class="exp-header">
                     <span class="exp-company-name">Publicis Sapient</span>
-                    <span class="exp-period">2021 - 2023</span>
+                    <span class="exp-period">2021 — 2023</span>
                 </div>
                 <div class="exp-roles">
-                    <div class="exp-role">
-                        <div class="exp-role-header">
-                            <span class="exp-role-title">Associate Product Manager</span>
-                            <span class="exp-role-dates">2022 - 2023</span>
+                    <div class="exp-role row">
+                        <div class="exp-role-aside">
+                            <div class="exp-role-title">Associate Product Manager</div>
+                            <div class="exp-role-dates">2022 — 2023</div>
                         </div>
                         <ul>
                             <li>Shipped B2C features on Nissan's Owner Portal, partnering across engineering, UX, and analytics to move from hypothesis to measurable outcome.</li>
-                            <li>Ran A/B testing and funnel analysis to improve engagement and conversion - building the data-informed instincts I now apply to product strategy.</li>
+                            <li>Ran A/B testing and funnel analysis to improve engagement and conversion — building the data-informed instincts I now apply to product strategy.</li>
                             <li>Mentored junior PMs on stakeholder communication, story writing, and running effective ceremonies.</li>
                         </ul>
                     </div>
-                    <div class="exp-role">
-                        <div class="exp-role-header">
-                            <span class="exp-role-title">Junior Associate Product Manager</span>
-                            <span class="exp-role-dates">2021 - 2022</span>
+                    <div class="exp-role row">
+                        <div class="exp-role-aside">
+                            <div class="exp-role-title">Junior Associate Product Manager</div>
+                            <div class="exp-role-dates">2021 — 2022</div>
                         </div>
                         <ul>
-                            <li>Cut my teeth on Uniper's B2B energy trading platform - backlog ownership, stakeholder workshops, and learning how complex domains require disciplined product thinking.</li>
+                            <li>Cut my teeth on Uniper's B2B energy trading platform — backlog ownership, stakeholder workshops, and learning how complex domains require disciplined product thinking.</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <hr class="divider">
 
     <!-- PROJECTS -->
     <section id="projects">
         <div class="container">
-            <div class="section-label reveal">Key Projects</div>
-            <h2 class="section-heading reveal">Things I've shipped</h2>
-            <p class="section-desc reveal">Products and systems I've taken from zero to production.</p>
-            <div class="projects-grid">
-                <article class="project-card reveal">
-                    <div class="project-icon"><i class="fa-solid fa-robot"></i></div>
-                    <h3>AI-Powered Operating Model</h3>
-                    <p>Designed a new way of working that weaves AI into every stage of product delivery - from discovery synthesis and spec writing to QA and stakeholder reporting. Not a tool rollout; a fundamental process redesign adopted across the company.</p>
-                    <div class="project-tags">
-                        <span class="tag">AI</span>
-                        <span class="tag">Ways of Working</span>
-                        <span class="tag">Process Design</span>
-                        <span class="tag">Org-wide</span>
+            <div class="section-head reveal">
+                <span class="kicker">03 — Key Projects</span>
+                <h2 class="section-heading">Things I've <em>shipped</em></h2>
+            </div>
+            <div class="projects-list">
+                <article class="project-row row reveal">
+                    <div class="project-aside">
+                        <span class="project-index">P.01</span>
+                        <div class="project-aside-title">AI-Powered Operating Model</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Designed a new way of working that weaves AI into every stage of product delivery — from discovery synthesis and spec writing to QA and stakeholder reporting. Not a tool rollout; a fundamental process redesign adopted across the company.</p>
+                        <div class="project-tags">
+                            <span class="tag">AI</span>
+                            <span class="tag">Ways of Working</span>
+                            <span class="tag">Process Design</span>
+                            <span class="tag">Org-wide</span>
+                        </div>
                     </div>
                 </article>
-                <article class="project-card reveal">
-                    <div class="project-icon"><i class="fa-solid fa-building-columns"></i></div>
-                    <h3>MGA Connect Core Platform</h3>
-                    <p>Own strategy and roadmap for a configurable multi-tenant SaaS platform in regulated financial services. Redesigned the discovery-to-delivery pipeline to ship faster with higher quality in a compliance-heavy environment.</p>
-                    <div class="project-tags">
-                        <span class="tag">SaaS</span>
-                        <span class="tag">Platform Strategy</span>
-                        <span class="tag">Insurance</span>
+                <article class="project-row row reveal">
+                    <div class="project-aside">
+                        <span class="project-index">P.02</span>
+                        <div class="project-aside-title">MGA Connect Core Platform</div>
+                    </div>
+                    <div class="project-body">
+                        <p>Own strategy and roadmap for a configurable multi-tenant SaaS platform in regulated financial services. Redesigned the discovery-to-delivery pipeline to ship faster with higher quality in a compliance-heavy environment.</p>
+                        <div class="project-tags">
+                            <span class="tag">SaaS</span>
+                            <span class="tag">Platform Strategy</span>
+                            <span class="tag">Insurance</span>
+                        </div>
                     </div>
                 </article>
-                <article class="project-card reveal">
-                    <div class="project-icon"><i class="fa-solid fa-scale-balanced"></i></div>
-                    <h3>Greenfield Insurance Platforms</h3>
-                    <p>Took two regulated insurance platforms from idea to revenue-generating production - a property underwriting system (5 months) and a financial lines &amp; claims platform (3 months). End-to-end ownership from research through go-live.</p>
-                    <div class="project-tags">
-                        <span class="tag">Greenfield</span>
-                        <span class="tag">Underwriting</span>
-                        <span class="tag">Claims</span>
-                        <span class="tag">Rapid Delivery</span>
+                <article class="project-row row reveal">
+                    <div class="project-aside">
+                        <span class="project-index">P.03</span>
+                        <div class="project-aside-title">Greenfield Insurance Platforms</div>
                     </div>
-                    <a href="https://www.azurtechnology.com/resources/case-studies/euclid-from-legacy-to-leading-edge/" target="_blank" rel="noopener noreferrer" class="case-study-link">Read case study <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    <div class="project-body">
+                        <p>Took two regulated insurance platforms from idea to revenue-generating production — a property underwriting system (5 months) and a financial lines &amp; claims platform (3 months). End-to-end ownership from research through go-live.</p>
+                        <div class="project-tags">
+                            <span class="tag">Greenfield</span>
+                            <span class="tag">Underwriting</span>
+                            <span class="tag">Claims</span>
+                            <span class="tag">Rapid Delivery</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://www.azurtechnology.com/resources/case-studies/euclid-from-legacy-to-leading-edge/" target="_blank" rel="noopener noreferrer" class="text-link">Read case study &#8599;</a>
+                        </div>
+                    </div>
                 </article>
             </div>
         </div>
     </section>
-
-    <hr class="divider">
 
     <!-- SIDE PROJECTS -->
     <section id="side-projects">
         <div class="container">
-            <div class="section-label reveal">Side Projects</div>
-            <h2 class="section-heading reveal">Things I build for fun</h2>
-            <div class="projects-grid">
-                <article class="project-card reveal">
-                    <div class="project-icon"><i class="fa-solid fa-chart-line"></i></div>
-                    <h3>PE Value Creation Dashboard</h3>
-                    <p>A working prototype of a PE portfolio management tool: value bridge waterfall, initiative tracker by owner and category, company drill-downs with EBITDA and revenue trends. Built on simulated data - in production it would connect to the firm's portfolio system, ERP exports, and data room feeds in place of the typed dataset.</p>
-                    <div class="project-tags">
-                        <span class="tag">Private Equity</span>
-                        <span class="tag">React</span>
-                        <span class="tag">Recharts</span>
-                        <span class="tag">TypeScript</span>
+            <div class="section-head reveal">
+                <span class="kicker">04 — Side Projects</span>
+                <h2 class="section-heading">Things I build <em>for fun</em></h2>
+            </div>
+            <div class="projects-list">
+                <article class="project-row row reveal">
+                    <div class="project-aside">
+                        <span class="project-index">S.01</span>
+                        <div class="project-aside-title">PE Value Creation Dashboard</div>
                     </div>
-                    <div style="display:flex;gap:0.625rem;flex-wrap:wrap">
-                        <a href="https://value-creation-dashboard.vercel.app/" target="_blank" rel="noopener noreferrer" class="case-study-link">Try it live <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        <a href="pe-dashboard-how-i-built-this.html" class="case-study-link" style="background:var(--bg-elevated);color:var(--text);">How I built this <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
-
-
-                <article class="project-card reveal">
-                    <div class="project-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3>RiskLens - Underwriting Platform</h3>
-                    <p>An insurance underwriting tool for SME submissions. Submit a risk profile and get a score, an Approved / Referred / Declined decision, and a rule-by-rule breakdown showing exactly what drove the outcome. Portfolio dashboard tracks decisions and industry exposure across the book.</p>
-                    <div class="project-tags">
-                        <span class="tag">Insurance</span>
-                        <span class="tag">Underwriting</span>
-                        <span class="tag">React</span>
-                        <span class="tag">Python / FastAPI</span>
-                    </div>
-                    <div style="display:flex;gap:0.625rem;flex-wrap:wrap">
-                        <a href="https://underwriting-risk-scoring.vercel.app/" target="_blank" rel="noopener noreferrer" class="case-study-link">Try it live <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        <a href="underwriting-how-i-built-this.html" class="case-study-link" style="background:var(--bg-elevated);color:var(--text);">How I built this <i class="fa-solid fa-arrow-right"></i></a>
+                    <div class="project-body">
+                        <p>A working prototype of a PE portfolio management tool: value bridge waterfall, initiative tracker by owner and category, company drill-downs with EBITDA and revenue trends. Built on simulated data — in production it would connect to the firm's portfolio system, ERP exports, and data room feeds in place of the typed dataset.</p>
+                        <div class="project-tags">
+                            <span class="tag">Private Equity</span>
+                            <span class="tag">React</span>
+                            <span class="tag">Recharts</span>
+                            <span class="tag">TypeScript</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://value-creation-dashboard.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-link">Try it live &#8599;</a>
+                            <a href="pe-dashboard-how-i-built-this.html" class="text-link">How I built this &#8594;</a>
+                        </div>
                     </div>
                 </article>
-
-                <article class="project-card reveal">
-                    <div class="project-icon"><i class="fa-solid fa-water"></i></div>
-                    <h3>Ondas</h3>
-                    <p>A forecast app for water sports in Portugal. Unlike most apps that only cover surf, Ondas finds the best spots for surfing, kitesurfing, windsurfing, and paddle based on real-time conditions, swell, and wind data.</p>
-                    <div class="project-tags">
-                        <span class="tag">Surf</span>
-                        <span class="tag">Kitesurf</span>
-                        <span class="tag">Windsurf</span>
-                        <span class="tag">Portugal</span>
+                <article class="project-row row reveal">
+                    <div class="project-aside">
+                        <span class="project-index">S.02</span>
+                        <div class="project-aside-title">RiskLens — Underwriting Platform</div>
                     </div>
-                    <div style="display:flex;gap:0.625rem;flex-wrap:wrap">
-                        <a href="https://ondas-phi.vercel.app/" target="_blank" rel="noopener noreferrer" class="case-study-link">Try it live <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        <a href="ondas-how-i-built-this.html" class="case-study-link" style="background:var(--bg-elevated);color:var(--text);">How I built this <i class="fa-solid fa-arrow-right"></i></a>
+                    <div class="project-body">
+                        <p>An insurance underwriting tool for SME submissions. Submit a risk profile and get a score, an Approved / Referred / Declined decision, and a rule-by-rule breakdown showing exactly what drove the outcome. Portfolio dashboard tracks decisions and industry exposure across the book.</p>
+                        <div class="project-tags">
+                            <span class="tag">Insurance</span>
+                            <span class="tag">Underwriting</span>
+                            <span class="tag">React</span>
+                            <span class="tag">Python / FastAPI</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://underwriting-risk-scoring.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-link">Try it live &#8599;</a>
+                            <a href="underwriting-how-i-built-this.html" class="text-link">How I built this &#8594;</a>
+                        </div>
+                    </div>
+                </article>
+                <article class="project-row row reveal">
+                    <div class="project-aside">
+                        <span class="project-index">S.03</span>
+                        <div class="project-aside-title">Ondas</div>
+                    </div>
+                    <div class="project-body">
+                        <p>A forecast app for water sports in Portugal. Unlike most apps that only cover surf, Ondas finds the best spots for surfing, kitesurfing, windsurfing, and paddle based on real-time conditions, swell, and wind data.</p>
+                        <div class="project-tags">
+                            <span class="tag">Surf</span>
+                            <span class="tag">Kitesurf</span>
+                            <span class="tag">Windsurf</span>
+                            <span class="tag">Portugal</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://ondas-phi.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-link">Try it live &#8599;</a>
+                            <a href="ondas-how-i-built-this.html" class="text-link">How I built this &#8594;</a>
+                        </div>
                     </div>
                 </article>
             </div>
         </div>
     </section>
 
-    <hr class="divider">
-
-    <!-- EDUCATION + TOOLS -->
+    <!-- EDUCATION -->
     <section id="education">
         <div class="container">
-            <div class="section-label reveal">Education</div>
-            <h2 class="section-heading reveal">Academic background</h2>
+            <div class="section-head reveal">
+                <span class="kicker">05 — Education</span>
+                <h2 class="section-heading">Academic <em>background</em></h2>
+            </div>
             <div class="edu-grid reveal">
                 <div class="edu-card">
                     <div class="edu-degree">MSc Management, Information Systems &amp; Digital Innovation</div>
                     <div class="edu-school">London School of Economics (LSE)</div>
-                    <div class="edu-detail">Distinction - 2021</div>
-                    <div class="edu-highlight"><i class="fa-solid fa-trophy"></i> Winning Team, LSE Sprint Week Challenge 2020 with Visa &amp; Roland Berger. Built a social-fuelled fraud detection concept.</div>
+                    <div class="edu-detail">Distinction — 2021</div>
+                    <div class="edu-highlight">Winning Team, LSE Sprint Week Challenge 2020 with Visa &amp; Roland Berger. Built a social-fuelled fraud detection concept.</div>
                 </div>
                 <div class="edu-card">
                     <div class="edu-degree">BSc Management &amp; Marketing</div>
                     <div class="edu-school">University of Sussex</div>
-                    <div class="edu-detail">First-Class Honours - 2019</div>
-                </div>
-            </div>
-
-            <div style="margin-top: 4rem;">
-                <div class="section-label reveal">Tools &amp; Stack</div>
-                <h2 class="section-heading reveal" style="margin-bottom: 1.5rem;">What I work with</h2>
-                <div class="tools-wrap reveal">
-                    <span class="tool-tag">Jira</span>
-                    <span class="tool-tag">Jira Product Discovery</span>
-                    <span class="tool-tag">Confluence</span>
-                    <span class="tool-tag">Claude Code</span>
-                    <span class="tool-tag">Figma</span>
-                    <span class="tool-tag">Miro</span>
-                    <span class="tool-tag">Lucidchart</span>
-                    <span class="tool-tag">Notion</span>
-                    <span class="tool-tag">Salesforce</span>
-                    <span class="tool-tag">Azure DevOps</span>
-                    <span class="tool-tag">Google Analytics</span>
-                    <span class="tool-tag">Power BI</span>
-                    <span class="tool-tag">Adobe Experience Manager</span>
+                    <div class="edu-detail">First-Class Honours — 2019</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <hr class="divider">
-
-    <!-- CONTACT -->
-    <section id="contact">
+    <!-- TOOLS -->
+    <section id="tools">
         <div class="container">
-            <div class="section-label reveal">Contact</div>
-            <h2 class="section-heading reveal">Let's connect</h2>
-            <p class="section-desc reveal" style="margin-left:auto;margin-right:auto;">Open to Head of Product, Product Lead, and AI Product Manager roles. Always happy to talk about product strategy, AI-assisted delivery, or building in complex domains.</p>
-            <div class="contact-grid reveal">
-                <a href="https://linkedin.com/in/mariana-qmarques" target="_blank" rel="noopener noreferrer" class="contact-card">
-                    <i class="fa-brands fa-linkedin-in"></i> LinkedIn
-                </a>
+            <div class="section-head reveal">
+                <span class="kicker">06 — Tools &amp; Stack</span>
+                <h2 class="section-heading">What I <em>work with</em></h2>
+            </div>
+            <div class="tools-wrap reveal">
+                <span class="tool-tag">Jira</span>
+                <span class="tool-tag">Jira Product Discovery</span>
+                <span class="tool-tag">Confluence</span>
+                <span class="tool-tag">Claude Code</span>
+                <span class="tool-tag">Figma</span>
+                <span class="tool-tag">Miro</span>
+                <span class="tool-tag">Lucidchart</span>
+                <span class="tool-tag">Notion</span>
+                <span class="tool-tag">Salesforce</span>
+                <span class="tool-tag">Azure DevOps</span>
+                <span class="tool-tag">Google Analytics</span>
+                <span class="tool-tag">Power BI</span>
+                <span class="tool-tag">Adobe Experience Manager</span>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <hr class="divider">
-        <p>&copy; 2026 Mariana Quinto Marques</p>
+        <div class="container">
+            <p class="footer-cta">Open to Head of Product, Product Lead, and AI Product Manager roles. Always happy to talk about product strategy, AI-assisted delivery, or building in complex domains.</p>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Mariana Quinto Marques &middot; London, UK</span>
+                <a href="https://linkedin.com/in/mariana-qmarques" target="_blank" rel="noopener noreferrer" class="text-link">LinkedIn &#8599;</a>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // Header scroll
         window.addEventListener('scroll', () => {
-            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
         });
 
-        // Mobile nav
         const navToggle = document.querySelector('.nav-toggle');
         const navLinks = document.querySelector('.nav-links');
         navToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('nav-open');
-            const icon = navToggle.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-xmark');
+            const open = navLinks.classList.toggle('nav-open');
+            navToggle.innerHTML = open ? '&#10005;' : '&#9776;';
         });
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('nav-open');
-                navToggle.querySelector('i').classList.add('fa-bars');
-                navToggle.querySelector('i').classList.remove('fa-xmark');
+                navToggle.innerHTML = '&#9776;';
             });
         });
 
-        // Scroll reveal
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1044,10 +829,8 @@
                 }
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Active nav
         const sections = document.querySelectorAll('section[id]');
         const allNavLinks = document.querySelectorAll('.nav-links a');
         const navObserver = new IntersectionObserver((entries) => {

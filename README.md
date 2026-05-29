@@ -6,8 +6,8 @@ Personal portfolio site for Mariana Quinto Marques — Senior Product Manager ba
 
 Single-file static site — HTML, CSS, and JS inline. No build step.
 
-- **Fonts:** Inter, JetBrains Mono (Google Fonts)
-- **Icons:** Font Awesome 6
+- **Fonts:** Fraunces, Inter (Google Fonts)
+- **Icons:** Font Awesome 6 (case-study pages)
 
 ## Deploy
 
